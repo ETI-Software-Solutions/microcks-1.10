@@ -19,25 +19,29 @@ import { Observable } from 'rxjs';
 
 import { TestRequest, TestResult } from '../models/test.model';
 import { RequestResponsePair, UnidirectionalEvent } from '../models/service.model';
+import { environment } from 'src/environments/environment';
+
+const ENDPOINTS = {
+  TESTS: () => `${environment.apiUrl}api/tests`,
+  TESTS_SERVICES: () => ENDPOINTS.TESTS() + `/service`
+};
 
 @Injectable({ providedIn: 'root' })
 export class TestsService {
-
-  private rootUrl = '/api';
 
   constructor(private http: HttpClient) { }
 
   public listByServiceId(serviceId: string, page: number = 1, pageSize: number = 20): Observable<TestResult[]> {
     const options = { params: new HttpParams().set('page', String(page - 1)).set('size', String(pageSize)) };
-    return this.http.get<TestResult[]>(this.rootUrl + '/tests/service/' + serviceId, options);
+    return this.http.get<TestResult[]>(ENDPOINTS.TESTS_SERVICES() + '/' + serviceId, options);
   }
 
   public countByServiceId(serviceId: string): Observable<any> {
-    return this.http.get<any>(this.rootUrl + '/tests/service/' + serviceId + '/count');
+    return this.http.get<any>(ENDPOINTS.TESTS_SERVICES() + '/' + serviceId + '/count');
   }
 
   public getTestResult(resultId: string): Observable<TestResult> {
-    return this.http.get<any>(this.rootUrl + '/tests/' + resultId);
+    return this.http.get<any>(ENDPOINTS.TESTS() + '/' + resultId);
   }
 
   public create(testRequest: TestRequest): Observable<TestResult> {
@@ -51,7 +55,7 @@ export class TestsService {
     operation = operation.replace(/\//g, '!');
     const testCaseId = test.id + '-' + test.testNumber + '-' + encodeURIComponent(operation);
     console.log('[getMessages] called for ' + testCaseId);
-    return this.http.get<RequestResponsePair>(this.rootUrl + '/tests/' + test.id + '/messages/' + testCaseId);
+    return this.http.get<RequestResponsePair>(ENDPOINTS.TESTS() + '/' + test.id + '/messages/' + testCaseId);
   }
 
   public getEventMessages(test: TestResult, operation: string): Observable<UnidirectionalEvent> {
@@ -61,6 +65,6 @@ export class TestsService {
     operation = operation.replace(/\//g, '!');
     const testCaseId = test.id + '-' + test.testNumber + '-' + encodeURIComponent(operation);
     console.log('[getEventMessages] called for ' + testCaseId);
-    return this.http.get<UnidirectionalEvent>(this.rootUrl + '/tests/' + test.id + '/events/' + testCaseId);
+    return this.http.get<UnidirectionalEvent>(ENDPOINTS.TESTS() + '/' + test.id + '/events/' + testCaseId);
   }
 }

@@ -20,6 +20,13 @@ import { FileUploader } from 'ng2-file-upload';
 
 import { Service } from '../../../models/service.model';
 import { ServicesService } from '../../../services/services.service';
+import { environment } from 'src/environments/environment';
+
+
+const ENDPOINTS = {
+  EXPORT: () => `${environment.apiUrl}api/export?`,
+  IMPORT: () => `${environment.apiUrl}api/import`
+};
 
 @Component({
   selector: 'app-snapshots-tab',
@@ -33,7 +40,7 @@ export class SnapshotsTabComponent implements OnInit {
   servicesCount: number;
 
   selectedServices: any = { ids: {} };
-  uploader: FileUploader = new FileUploader({url: '/api/import', itemAlias: 'file'});
+  uploader: FileUploader = new FileUploader({ url: ENDPOINTS.IMPORT(), itemAlias: 'file' });
 
   constructor(private servicesSvc: ServicesService, private notificationService: NotificationService) {}
 
@@ -58,7 +65,7 @@ export class SnapshotsTabComponent implements OnInit {
   }
 
   public createExport(): void {
-    let downloadPath = '/api/export?';
+    let downloadPath = ENDPOINTS.EXPORT();
     Object.keys(this.selectedServices.ids).forEach(function(element, index, array) {
       downloadPath += '&serviceIds=' + element;
     });

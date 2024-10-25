@@ -18,15 +18,18 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { Contract } from '../models/service.model';
+import { environment } from 'src/environments/environment';
+
+const ENDPOINTS = {
+  GET_CONTRACT: () => `${environment.apiUrl}api/resources/service/`
+};
 
 @Injectable({ providedIn: 'root' })
 export class ContractsService {
 
-  private rootUrl = '/api';
-
   constructor(private http: HttpClient) { }
 
   public listByServiceId(serviceId: string): Observable<Contract[]> {
-    return this.http.get<Contract[]>(this.rootUrl + '/resources/service/' + serviceId);
+    return this.http.get<Contract[]>(ENDPOINTS.GET_CONTRACT() + serviceId);
   }
 }

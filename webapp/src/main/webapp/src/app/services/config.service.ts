@@ -16,12 +16,17 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { User } from '../models/user.model';
+import { environment } from 'src/environments/environment';
 
 const DEFAULT_CONFIG: any = {
   mode: 'dev',
   auth: {
     type: 'keycloakjs'
   }
+};
+
+const ENDPOINTS = {
+  CONFIG_URL: () => `${environment.apiUrl}api/features/config`
 };
 
 const ANONYMOUS_AUTH_TYPE = 'anonymous';
@@ -94,11 +99,11 @@ export class ConfigService {
   }
 
   public loadConfiguredFeatures(): Promise<any>  {
-    console.info('[ConfigService] Completing config with additional features...');
-    const featurePromise = this.http.get<any>('/api/features/config')
+    console.log('[ConfigService] Completing config with additional features...');
+    const featurePromise = this.http.get<any>(ENDPOINTS.CONFIG_URL())
       .toPromise().then(results => {
         this.config.features = results;
-        console.info('[ConfigService] Got config: ' + JSON.stringify(this.config.features));
+        console.log('[ConfigService] Got config: ' + JSON.stringify(this.config.features));
         return results;
       });
     return featurePromise;

@@ -24,6 +24,11 @@ import {
 } from 'patternfly-ng/notification';
 import { FileUploader, FileItem, ParsedResponseHeaders } from 'ng2-file-upload';
 import { IAuthenticationService } from '../../../services/auth.service';
+import { environment } from 'src/environments/environment';
+
+const ENDPOINTS = {
+  ARTIFACT_UPLOAD: () => `${environment.apiUrl}api/artifact/upload`
+};
 
 @Component({
   selector: 'app-uploader-dialog',
@@ -44,14 +49,14 @@ export class ArtifactUploaderDialogComponent implements OnInit {
   ) {
     if (this.authService.isAuthenticated) {
       this.uploader = new FileUploader({
-        url: '/api/artifact/upload',
+        url: ENDPOINTS.ARTIFACT_UPLOAD(),
         authToken: 'Bearer ' + this.authService.getAuthenticationSecret(),
         itemAlias: 'file',
         parametersBeforeFiles: true,
       });
     } else {
       this.uploader = new FileUploader({
-        url: '/api/artifact/upload',
+        url: ENDPOINTS.ARTIFACT_UPLOAD(),
         itemAlias: 'file',
         parametersBeforeFiles: true,
       });

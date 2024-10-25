@@ -56,6 +56,12 @@ import { ConfigService } from '../../../services/config.service';
 import { ContractsService } from '../../../services/contracts.service';
 import { MetricsService } from 'src/app/services/metrics.service';
 import { ServicesService } from '../../../services/services.service';
+import { environment } from 'src/environments/environment';
+
+
+const ENDPOINTS = {
+  MOCK_URL: () => `${environment.apiUrl}`,
+};
 
 @Component({
   selector: 'app-service-detail-page',
@@ -413,7 +419,7 @@ export class ServiceDetailPageComponent implements OnInit {
 
   public formatMockUrl(operation: Operation, dispatchCriteria: string, queryParameters: Parameter[]): string {
     // console.log("[ServiceDetailPageComponent.formatMockUrl()]");
-    let result = document.location.origin;
+    let result = ENDPOINTS.MOCK_URL();
 
     // Manage dev mode.
     if (result.endsWith('localhost:4200')) {
@@ -421,7 +427,7 @@ export class ServiceDetailPageComponent implements OnInit {
     }
 
     if (this.resolvedServiceView.service.type === ServiceType.REST) {
-      result += '/rest/';
+      result += 'rest/';
       result +=
         this.encodeUrl(this.resolvedServiceView.service.name) +
         '/' +
@@ -485,7 +491,7 @@ export class ServiceDetailPageComponent implements OnInit {
     } else if (
       this.resolvedServiceView.service.type === ServiceType.SOAP_HTTP
     ) {
-      result += '/soap/';
+      result += 'soap/';
       result +=
         this.encodeUrl(this.resolvedServiceView.service.name) +
         '/' +
@@ -493,7 +499,7 @@ export class ServiceDetailPageComponent implements OnInit {
     } else if (
       this.resolvedServiceView.service.type === ServiceType.GENERIC_REST
     ) {
-      result += '/dynarest/';
+      result += 'dynarest/';
       const resourceName = this.removeVerbInUrl(operation.name);
       result +=
         this.encodeUrl(this.resolvedServiceView.service.name) +

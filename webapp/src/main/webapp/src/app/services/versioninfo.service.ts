@@ -16,6 +16,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
+
+
+const ENDPOINTS = {
+  VERSION_INFO: () => `${environment.apiUrl}api/version/info/`
+};
 
 @Injectable({ providedIn: 'root' })
 export class VersionInfoService {
@@ -25,6 +31,6 @@ export class VersionInfoService {
   constructor(private http: HttpClient) { }
 
   public getVersionInfo(): Observable<any> {
-    return this.http.get<any>(this.rootUrl + '/version/info');
+    return this.http.get<any>(ENDPOINTS.VERSION_INFO());
   }
 }

@@ -21,6 +21,7 @@ import { switchMap } from 'rxjs/operators';
 import { User } from '../models/user.model';
 import { IAuthenticationService } from './auth.service';
 import { KeycloakAuthenticationService } from './auth-keycloak.service';
+import { environment } from 'src/environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class UsersService {

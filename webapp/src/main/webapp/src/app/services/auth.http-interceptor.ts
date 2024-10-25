@@ -27,7 +27,7 @@ export class AuthenticationHttpInterceptor implements HttpInterceptor {
   // constructor() { }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    console.log('[AuthenticationHttpInterceptor] intercept for ' + req.method);
+    console.log('[AuthenticationHttpInterceptor] intercept for ' + req.method + ' ' + req.url);
 
     if (req.method === 'OPTIONS') {
       return next.handle(req);

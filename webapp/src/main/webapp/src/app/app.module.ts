@@ -87,6 +87,7 @@ import json from 'highlight.js/lib/languages/json';
 import xml from 'highlight.js/lib/languages/xml';
 import yaml from 'highlight.js/lib/languages/yaml';
 import { ServiceRefsDialogComponent } from './pages/importers/service-refs.dialog';
+import { APP_BASE_HREF } from '@angular/common';
 
 /**
  * Import specific languages to avoid importing everything
@@ -144,6 +145,10 @@ export function configLoader(configService: ConfigService) {
       useValue: {
         languages: getHighlightLanguages
       }
+    },
+    {
+      provide: APP_BASE_HREF,
+      useValue: window['base-href']
     }
   ],
   entryComponents: [

@@ -16,6 +16,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 import { Metadata } from '../models/commons.model';
 import {
@@ -26,9 +27,14 @@ import {
   OperationMutableProperties,
 } from '../models/service.model';
 
+
+const ENDPOINTS = {
+  GENERIC_RESOURCE: () => `${environment.apiUrl}api/genericresources/service`,
+  SERVICES: () => `${environment.apiUrl}api/services`
+};
+
 @Injectable({ providedIn: 'root' })
 export class ServicesService {
-  private rootUrl = '/api';
 
   constructor(private http: HttpClient) {}
 
@@ -41,7 +47,7 @@ export class ServicesService {
         .set('page', String(page - 1))
         .set('size', String(pageSize)),
     };
-    return this.http.get<Service[]>(this.rootUrl + '/services', options);
+    return this.http.get<Service[]>(ENDPOINTS.SERVICES(), options);
   }
 
   public filterServices(
@@ -59,35 +65,29 @@ export class ServicesService {
     }
 
     const options = { params: httpParams };
-    return this.http.get<Service[]>(this.rootUrl + '/services/search', options);
+    return this.http.get<Service[]>(ENDPOINTS.SERVICES() + '/search', options);
   }
 
   public countServices(): Observable<any> {
-    return this.http.get<any>(this.rootUrl + '/services/count');
+    return this.http.get<any>(ENDPOINTS.SERVICES() + '/count');
   }
 
   public getServicesMap(): Observable<any> {
-    return this.http.get<any>(this.rootUrl + '/services/map');
+    return this.http.get<any>(ENDPOINTS.SERVICES() + '/map');
   }
 
   public getServicesLabels(): Observable<any> {
-    return this.http.get<any>(this.rootUrl + '/services/labels');
+    return this.http.get<any>(ENDPOINTS.SERVICES() + '/labels');
   }
 
   public getServiceView(serviceId: string): Observable<ServiceView> {
     const options = { params: new HttpParams().set('messages', 'true') };
-    return this.http.get<ServiceView>(
-      this.rootUrl + '/services/' + serviceId,
-      options
-    );
+    return this.http.get<ServiceView>(ENDPOINTS.SERVICES() + '/' + serviceId, options);
   }
 
   public getService(serviceId: string): Observable<Service> {
     const options = { params: new HttpParams().set('messages', 'false') };
-    return this.http.get<Service>(
-      this.rootUrl + '/services/' + serviceId,
-      options
-    );
+    return this.http.get<Service>(ENDPOINTS.SERVICES() + '/' + serviceId, options);
   }
 
   public createDirectResourceAPI(api: Api): Observable<Service> {
@@ -102,7 +102,7 @@ export class ServicesService {
   }
 
   public deleteService(service: Service): Observable<Service> {
-    return this.http.delete<Service>(this.rootUrl + '/services/' + service.id);
+    return this.http.delete<Service>(ENDPOINTS.SERVICES() + '/' + service.id);
   }
 
   public getGenericResources(
@@ -115,20 +115,14 @@ export class ServicesService {
         .set('page', String(page - 1))
         .set('size', String(pageSize)),
     };
-    return this.http.get<GenericResource[]>(
-      this.rootUrl + '/genericresources/service/' + service.id,
-      options
-    );
+    return this.http.get<GenericResource[]>(ENDPOINTS.GENERIC_RESOURCE() + '/' + service.id, options);
   }
 
   public updateServiceMetadata(
     service: Service,
     metadata: Metadata
   ): Observable<any> {
-    return this.http.put<any>(
-      this.rootUrl + '/services/' + service.id + '/metadata',
-      metadata
-    );
+    return this.http.put<any>(ENDPOINTS.SERVICES() + '/' + service.id + '/metadata', metadata);
   }
 
   public updateServiceOperationProperties(
@@ -139,16 +133,10 @@ export class ServicesService {
     const options = {
       params: new HttpParams().set('operationName', operationName),
     };
-    return this.http.put<any>(
-      this.rootUrl + '/services/' + service.id + '/operation',
-      properties,
-      options
-    );
+    return this.http.put<any>(ENDPOINTS.SERVICES() + '/' + service.id + '/operation', properties, options);
   }
 
   public countGenericResources(service: Service): Observable<any> {
-    return this.http.get<any>(
-      this.rootUrl + '/genericresources/service/' + service.id + '/count'
-    );
+    return this.http.get<any>(ENDPOINTS.GENERIC_RESOURCE() + '/' + service.id + '/count');
   }
 }
